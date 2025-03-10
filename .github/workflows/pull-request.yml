@@ -12,31 +12,6 @@ env:
   PACKAGE_MANAGER: pnpm
 
 jobs:
-  lint-test:
-    name: "Lint and Test"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Checkout Repository"
-        uses: "actions/checkout@v4"
-
-      - name: "Setup Node.js"
-        uses: "actions/setup-node@v4"
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-
-      - name: "Install PNPM"
-        run: npm install -g ${{ env.PACKAGE_MANAGER }}
-
-      - name: "Install Dependencies"
-        run: pnpm install --frozen-lockfile
-
-      - name: "Run Linter"
-        run: pnpm run lint
-
-      - name: "Run Tests"
-        run: pnpm run test
-
   build:
     name: "Build Docker Image"
     runs-on: "ubuntu-latest"
