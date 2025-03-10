@@ -1,0 +1,31 @@
+name: "Pull Request"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+  PACKAGE_MANAGER: pnpm
+
+jobs:
+  build:
+    name: "Build Docker Image"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout Repository"
+        uses: "actions/checkout@v4"
+
+      - name: "Build Docker Image"
+        run: |
+          docker build -t my-nextjs-app .
+
+      - name: "Run Container Test"
+        run: |
+          docker run --rm -d -p 3000:3000 --name test-container my-nextjs-app
+          sleep 10
+          curl -f http://localhost:3000 || (docker logs test-container && exit 1)
+          docker stop test-container
